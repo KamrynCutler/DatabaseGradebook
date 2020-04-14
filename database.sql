@@ -253,7 +253,21 @@ SELECT s.StudentID, s.FirstName
 FROM STUDENT s JOIN ENROLLMENT e
 WHERE e.CourseID = 85675 AND s.StudentID = e.StudentID;
 
--- Number 6: List all of the students in a course and all of their scores on every assignment
+-- TASK 6
+-- List all of the students in a course and all of their scores on every assignment
+SELECT DISTINCT pt.StudentID, st.FirstName, st.LastName, pt.CourseID,pt.AssignmentID, pt.CategoryName, pt.Points, pt.PointsPossible, pt.Percentage
+FROM (
+    SELECT STUDENT.StudentID, AssignmentID, FirstName, LastName, CourseID, Points
+    FROM STUDENT JOIN ENROLLMENT JOIN SCORE
+    WHERE STUDENT.StudentID = ENROLLMENT.StudentID
+    AND STUDENT.StudentID = SCORE.StudentID) st
+JOIN
+(SELECT StudentID, CourseID, CategoryName, ASSIGNMENT.AssignmentID, Points, ASSIGNMENT.PointsPossible, DISTRIBUTION.Percentage
+    FROM DISTRIBUTION JOIN ASSIGNMENT JOIN SCORE
+    WHERE DISTRIBUTION.DistributionID = ASSIGNMENT.DistributionID
+    AND ASSIGNMENT.AssignmentID = SCORE.AssignmentID) pt
+WHERE st.AssignmentID = pt.AssignmentID
+AND st.Points = pt.Points AND st.StudentID=1234;
 
 -- TASK 7
 -- Add an assignment to a course
